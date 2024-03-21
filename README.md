@@ -179,8 +179,8 @@ All the loads and stores are "parallel". Similarly, in a slightly more complex e
  .L3:
 	movq	(%rsi,%rax,8), %rcx      # load 8 bytes from array1[i] into rcx
 	movq	(%rbx,%rax,8), %r10      # load 8 bytes from array2[i] into rdx
-	addq    %r10, %rdx               # add the two values
-	movq	%rdx, (%rdi,%rax,8)      # store 8 bytes from rdx into array3[i]
+	addq    %r10, %rcx               # add the two values
+	movq	%rcx, (%rdi,%rax,8)      # store 8 bytes from rdx into array3[i]
 	addq	$1, %rax
 	cmpq	%rax, %rdx
 	jne	.L3
