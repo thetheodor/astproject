@@ -7,7 +7,7 @@
 - Compilers can automatically vectorize code using SIMD instructions, as shown in the previous examples.
 - Autovectorization is an active area of research and development in compilers
   with many new papers every year.
-- Compilers can inform the programmer about the vectorization process using flags like `-fopt-info-vec` in GCC, [LLVM offers similar diagnostics](https://llvm.org/docs/Vectorizers.html#diagnostics). 
+- Compilers can inform the programmer about the vectorization process using flags like `-fopt-info-vec` in GCC, [LLVM generates similar diagnostics](https://llvm.org/docs/Vectorizers.html#diagnostics). 
 - Specialized languages and compilers such as [ISPC](https://ispc.github.io/) and [Halide](https://halide-lang.org/) are designed to make it easier to write vectorized code.
 
 ###### Example: Copying an array
@@ -165,13 +165,13 @@ For example in the following code (from the first example that copies an array)
 We can identify that the load and store instructions are independent and can be executed in parallel (i.e., they can be vectorized) by looking at the dataflow:
 ```
 Iteration 1:
-load a[i+0] -> rcx -> store a[i+0]
+load b+0  -> rcx -> store a+0
 
 Iteration 2:
-load a[i+1] -> rcx -> store a[i+1]
+load b+8  -> rcx -> store a+8
 
 Iteration 3:
-load a[i+2] -> rcx -> store a[i+2]
+load b+18 -> rcx -> store a+16
 ...
 ```
 All the loads and stores are "parallel". Similarly, in a slightly more complex example:
@@ -188,26 +188,26 @@ All the loads and stores are "parallel". Similarly, in a slightly more complex e
 Dataflow:
 ```
 Iteration 1:
-load array1[i+0] -> rcx 
-                       \    
-                        -> add r10 and rcx -> store arrya3[i+0] 
-                       / 
-load array2[i+0] -> r10 
+load array1+0  -> rcx 
+                     \    
+                      -> add r10 and rcx -> store array3+0
+                     / 
+load array2+0  -> r10 
 
 Iteration 2:
-load array1[i+1] -> rcx 
-                       \    
-                        -> add r10 and rcx -> store arrya3[i+1] 
-                       / 
-load array2[i+1] -> r10 
+load array1+8  -> rcx 
+                     \    
+                      -> add r10 and rcx -> store array3+8
+                     / 
+load array2+8  -> r10 
 
 
 Iteration 3:
-load array1[i+2] -> rcx 
-                       \    
-                        -> add r10 and rcx -> store arrya3[i+2] 
-                       / 
-load array2[i+2] -> r10 
+load array1+16 -> rcx 
+                     \    
+                      -> add r10 and rcx -> store array3+16
+                     / 
+load array2+16 -> r10 
 ...
 ```
 
